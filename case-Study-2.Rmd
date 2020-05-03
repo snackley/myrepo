@@ -1,0 +1,57 @@
+---
+title: "Case Study 2 Wealth and Life Expectancy (Gapmiinder)"
+author: "Nathan Ackley"
+date: "5/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(gapminder)
+View(gapminder)
+
+noku <- filter(gapminder, country != "Kuwait")
+```
+
+## Background
+
+I wasn't aware of the facet_wrap function, which is super useful for creating multiple graphs in the same row. I also wasn't aware that you could create a "group" in the geom_line function to group your lines by a specific variable. I know I didn't do the second graph perfectly, but it will only push me to learn more about ggplot and the tidyverse in general.
+
+```{r}
+p <- ggplot(noku) +
+  theme_bw() +
+  geom_point(mapping = aes(x = lifeExp, y = gdpPercap, size = pop, color = continent)) +
+  facet_wrap( ~ year, nrow = 1) +
+  scale_y_continuous(trans = "sqrt")
+
+p
+
+
+ggsave("plot_1", device = "png", width = 15)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r}
+h <- ggplot(noku, aes(x = year, y = gdpPercap, color = continent)) +
+  theme_bw() +
+  geom_point() +
+  geom_line(aes(group = country)) +
+  ylim(0 , 50000) +
+  facet_wrap(~continent, nrow = 1) +
+  scale_y_continuous(trans = "sqrt") +
+  geom_line(data = k, aes(x = year, y = GDP, color = "black")) +
+  geom_point()
+  ggsave("plot_2", device = "pdf", width = 15)
+
+  h 
+  
+#k <- noku %>% 
+#+ group_by(continent, year) %>% 
+#+ summarise(GDP = weighted.mean(gdpPercap))  
+  
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
